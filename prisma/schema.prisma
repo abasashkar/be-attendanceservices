@@ -1,0 +1,51 @@
+model Teacher {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  classes   Class[]
+  createdAt DateTime @default(now())
+}
+
+model Class {
+  id         String    @id @default(uuid())
+  name       String
+  teacherId  String
+  teacher    Teacher   @relation(fields: [teacherId], references: [id])
+  students   Student[]
+  records    AttendanceRecord[]
+  createdAt  DateTime  @default(now())
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  name      String
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  entries   AttendanceEntry[]
+  createdAt DateTime @default(now())
+}
+
+model AttendanceRecord {
+  id        String   @id @default(uuid())
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  date      DateTime
+  entries   AttendanceEntry[]
+  createdAt DateTime @default(now())
+
+  @@unique([classId, date]) // prevent duplicate record same day
+}
+
+model AttendanceEntry {
+  id          String   @id @default(uuid())
+  recordId    String
+  studentId   String
+  status      String   // PRESENT / ABSENT
+  synced      Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  record      AttendanceRecord @relation(fields: [recordId], references: [id])
+  student     Student          @relation(fields: [studentId], references: [id])
+
+  @@unique([recordId, studentId]) // avoid duplicate per student
+}
