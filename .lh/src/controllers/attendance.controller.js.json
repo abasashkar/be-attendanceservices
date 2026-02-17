@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/controllers/attendance.controller.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1771169625601,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170390993,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,10 +5,10 @@\n   res.status(201).json(record);\n };\n \n exports.markAttendance = async (req, res) => {\n-  const result = await attendanceService.markAttendance(req.body);\n-  res.json(result);\n+  const entry = await attendanceService.markAttendance(req.body);\n+  res.json(entry);\n };\n \n exports.syncAttendance = async (req, res) => {\n   const result = await attendanceService.syncAttendance(req.body);\n"
+                },
+                {
+                    "date": 1771170598133,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+const attendanceService = require(\"../services/\");\n+\n+exports.createRecord = async (req, res) => {\n+  const record = await attendanceService.createRecord(req.body);\n+  res.status(201).json(record);\n+};\n+\n+exports.markAttendance = async (req, res) => {\n+  const entry = await attendanceService.markAttendance(req.body);\n+  res.json(entry);\n+};\n+\n+exports.syncAttendance = async (req, res) => {\n+  const result = await attendanceService.syncAttendance(req.body);\n+  res.json(result);\n+};\n"
+                }
+            ],
+            "date": 1771169625601,
+            "name": "Commit-0",
+            "content": "const attendanceService = require(\"../services/attendance.service\");\n\nexports.createRecord = async (req, res) => {\n  const record = await attendanceService.createRecord(req.body);\n  res.status(201).json(record);\n};\n\nexports.markAttendance = async (req, res) => {\n  const result = await attendanceService.markAttendance(req.body);\n  res.json(result);\n};\n\nexports.syncAttendance = async (req, res) => {\n  const result = await attendanceService.syncAttendance(req.body);\n  res.json(result);\n};\n"
+        }
+    ]
+}

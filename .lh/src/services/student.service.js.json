@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/services/student.service.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1771170069195,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170414657,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,15 @@\n+const prisma = require(\"../config/prisma\");\n+const redis = require(\"../config/redis\");\n+\n exports.getStudentsByClass = async (classId) => {\n   const cacheKey = `students:${classId}`;\n \n   const cached = await redis.get(cacheKey);\n   if (cached) return JSON.parse(cached);\n \n   const students = await prisma.student.findMany({\n-    where: { classId }\n+    where: { classId },\n   });\n \n   await redis.set(cacheKey, JSON.stringify(students), \"EX\", 1800);\n   return students;\n"
+                }
+            ],
+            "date": 1771170069194,
+            "name": "Commit-0",
+            "content": "exports.getStudentsByClass = async (classId) => {\n  const cacheKey = `students:${classId}`;\n\n  const cached = await redis.get(cacheKey);\n  if (cached) return JSON.parse(cached);\n\n  const students = await prisma.student.findMany({\n    where: { classId }\n  });\n\n  await redis.set(cacheKey, JSON.stringify(students), \"EX\", 1800);\n  return students;\n};\n"
+        }
+    ]
+}

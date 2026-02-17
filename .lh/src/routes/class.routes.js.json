@@ -1,0 +1,58 @@
+{
+    "sourceFile": "src/routes/class.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 10,
+            "patches": [
+                {
+                    "date": 1771165887281,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771165897798,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,7 +2,16 @@\n const router = express.Router();\n const { getClasses } = require(\"../controllers/class.controller\");\n const authenticate = require(\"../middlewares/auth.middleware\");\n \n+const requireRole = (...roles) => {\n+  return (req, res, next) => {\n+    if (!roles.includes(req.user.role)) {\n+      return res.status(403).json({ message: \"Forbidden\" });\n+    }\n+    next();\n+  };\n+};\n+router.get(\"/\", authenticate, requireRole(\"TEACHER\"), getClasses);\n \n \n module.exports = router;\n"
+                },
+                {
+                    "date": 1771168284091,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +0,0 @@\n-const express = require(\"express\");\n-const router = express.Router();\n-const { getClasses } = require(\"../controllers/class.controller\");\n-const authenticate = require(\"../middlewares/auth.middleware\");\n-\n-const requireRole = (...roles) => {\n-  return (req, res, next) => {\n-    if (!roles.includes(req.user.role)) {\n-      return res.status(403).json({ message: \"Forbidden\" });\n-    }\n-    next();\n-  };\n-};\n-router.get(\"/\", authenticate, requireRole(\"TEACHER\"), getClasses);\n-\n-\n-module.exports = router;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1771169988308,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n-\n+router.get(\"/:teacherId\", authenticate, requireRole(\"TEACHER\"), getClasses);\n"
+                },
+                {
+                    "date": 1771170299480,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,9 @@\n+const express = require(\"express\");\n+const router = express.Router();\n+const authenticate = require(\"../middlewares/auth.middleware\");\n+const requireRole = require(\"../middlewares/role.middleware\");\n+const { getClasses } = require(\"../controllers/class.controller\");\n+\n router.get(\"/:teacherId\", authenticate, requireRole(\"TEACHER\"), getClasses);\n+\n+module.exports = router;\n"
+                },
+                {
+                    "date": 1771171989688,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,7 +3,8 @@\n const authenticate = require(\"../middlewares/auth.middleware\");\n const requireRole = require(\"../middlewares/role.middleware\");\n const { getClasses } = require(\"../controllers/class.controller\");\n \n-router.get(\"/:teacherId\", authenticate, requireRole(\"TEACHER\"), getClasses);\n+router.get(\"/\", authenticate, requireRole(\"TEACHER\"), getClasses);\n \n+\n module.exports = router;\n"
+                },
+                {
+                    "date": 1771172032164,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,4 @@\n const express = require(\"express\");\n const router = express.Router();\n const authenticate = require(\"../middlewares/auth.middleware\");\n const requireRole = require(\"../middlewares/role.middleware\");\n-const { getClasses } = require(\"../controllers/class.controller\");\n-\n-router.get(\"/\", authenticate, requireRole(\"TEACHER\"), getClasses);\n-\n-\n-module.exports = router;\n"
+                },
+                {
+                    "date": 1771172037551,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,13 @@\n const express = require(\"express\");\n const router = express.Router();\n const authenticate = require(\"../middlewares/auth.middleware\");\n const requireRole = require(\"../middlewares/role.middleware\");\n+exports.getClasses = async (req, res) => {\n+  const teacherId = req.user.id;\n+\n+  const classes = await prisma.class.findMany({\n+    where: { teacherId }\n+  });\n+\n+  res.json(classes);\n+};\n"
+                },
+                {
+                    "date": 1771172492947,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,10 @@\n const express = require(\"express\");\n const router = express.Router();\n const authenticate = require(\"../middlewares/auth.middleware\");\n const requireRole = require(\"../middlewares/role.middleware\");\n-exports.getClasses = async (req, res) => {\n-  const teacherId = req.user.id;\n+const { getClasses } = require(\"../controllers/class.controller\");\n \n-  const classes = await prisma.class.findMany({\n-    where: { teacherId }\n-  });\n+router.get(\"/\", authenticate, getClasses);\n \n-  res.json(classes);\n-};\n+\n+module.exports = router;\n"
+                },
+                {
+                    "date": 1771172509521,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,10 @@\n+const express = require(\"express\");\n+const router = express.Router();\n+const authenticate = require(\"../middlewares/auth.middleware\");\n+const requireRole = require(\"../middlewares/role.middleware\");\n+const { getClasses } = require(\"../controllers/class.controller\");\n+\n+router.get(\"/\", authenticate, getClasses);\n+\n+\n+module.exports = router;\n"
+                },
+                {
+                    "date": 1771174073668,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,14 +7,4 @@\n router.get(\"/\", authenticate, getClasses);\n \n \n module.exports = router;\n-const express = require(\"express\");\n-const router = express.Router();\n-const authenticate = require(\"../middlewares/auth.middleware\");\n-const requireRole = require(\"../middlewares/role.middleware\");\n-const { getClasses } = require(\"../controllers/class.controller\");\n-\n-router.get(\"/\", authenticate, getClasses);\n-\n-\n-module.exports = router;\n"
+                }
+            ],
+            "date": 1771165887281,
+            "name": "Commit-0",
+            "content": "const express = require(\"express\");\nconst router = express.Router();\nconst { getClasses } = require(\"../controllers/class.controller\");\nconst authenticate = require(\"../middlewares/auth.middleware\");\n\n\n\nmodule.exports = router;\n"
+        }
+    ]
+}

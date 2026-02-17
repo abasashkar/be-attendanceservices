@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/controllers/class.controller.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1771170004228,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170354333,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,6 @@\n+const classService = require(\"../services/class.service\");\n+\n exports.getClasses = async (req, res) => {\n   const { teacherId } = req.params;\n   const classes = await classService.getClassesByTeacher(teacherId);\n   res.json(classes);\n"
+                },
+                {
+                    "date": 1771172324664,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,9 @@\n const classService = require(\"../services/class.service\");\n \n exports.getClasses = async (req, res) => {\n-  const { teacherId } = req.params;\n+  const teacherId = req.user.id;   // 🔥 get from JWT\n+\n   const classes = await classService.getClassesByTeacher(teacherId);\n+\n   res.json(classes);\n };\n"
+                },
+                {
+                    "date": 1771172339011,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,4 +6,5 @@\n   const classes = await classService.getClassesByTeacher(teacherId);\n \n   res.json(classes);\n };\n+rs\n"
+                }
+            ],
+            "date": 1771170004228,
+            "name": "Commit-0",
+            "content": "exports.getClasses = async (req, res) => {\n  const { teacherId } = req.params;\n  const classes = await classService.getClassesByTeacher(teacherId);\n  res.json(classes);\n};\n"
+        }
+    ]
+}

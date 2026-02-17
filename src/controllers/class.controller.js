@@ -1,18 +1,26 @@
-const { getClassesByTeacher } = require("../services/class.service");
+const classService = require("../services/class.service");
 
-const getClasses = async (req, res) => {
+exports.getClasses = async (req, res) => {
+  const teacherId = req.user.id;   // 🔥 get from JWT
+
+  const classes = await classService.getClassesByTeacher(teacherId);
+
+  res.json(classes);
+};
+
+exports.createClassByAdmin = async (req, res) => {
   try {
-    console.log("⚡ Controller: getClasses called for user", req.user);
-    const teacherId = req.user.id;
+    const { name, teacherId } = req.body;
 
-    const classes = await getClassesByTeacher(teacherId);
-    console.log("⚡ Classes fetched:", classes);
+    const newClass = await classService.createClass({
+      name,
+      teacherId,
+    });
 
-    res.json(classes);
+    res.status(201).json(newClass);
   } catch (error) {
-    console.error("⚠️ Error fetching classes:", error);
-    res.status(500).json({ message: "Error fetching classes" });
+    console.error("FULL ERROR:", error);
+    res.status(500).json({ error });
   }
 };
 
-module.exports = { getClasses };

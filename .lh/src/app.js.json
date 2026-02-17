@@ -1,0 +1,50 @@
+{
+    "sourceFile": "src/app.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1771169693868,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771169703811,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n const express = require(\"express\");\n const classRouter = require(\"./routes/class.routes\");\n-const studentRouter = require(\"./routes/student.routes\");\n+const studentRouter = require(\"./routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n const app = express();\n \n"
+                },
+                {
+                    "date": 1771170185672,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n const express = require(\"express\");\n const classRouter = require(\"./routes/class.routes\");\n-const studentRouter = require(\"./routes\");\n+const studentRouter = require(\"./routes/student.routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n const app = express();\n \n"
+                },
+                {
+                    "date": 1771170501458,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n const express = require(\"express\");\n const classRouter = require(\"./routes/class.routes\");\n-const studentRouter = require(\"./routes/student.routes\");\n+const studentRouter = require(\"./routes/\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n const app = express();\n \n"
+                },
+                {
+                    "date": 1771174482220,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,12 @@\n+require('./config/env'); // Load .env variables\n+\n+\n+\n+\n const express = require(\"express\");\n const classRouter = require(\"./routes/class.routes\");\n-const studentRouter = require(\"./routes/\");\n+const studentRouter = require(\"./routes/student.routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n const app = express();\n \n"
+                },
+                {
+                    "date": 1771174517004,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,8 @@\n require('./config/env'); // Load .env variables\n \n-\n-\n-\n const express = require(\"express\");\n+const errorHandler = require('./middleware/error.middleware');\n const classRouter = require(\"./routes/class.routes\");\n const studentRouter = require(\"./routes/student.routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n"
+                },
+                {
+                    "date": 1771174524237,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n-require('./config/env'); // Load .env variables\n \n+\n+\n+\n const express = require(\"express\");\n-const errorHandler = require('./middleware/error.middleware');\n const classRouter = require(\"./routes/class.routes\");\n const studentRouter = require(\"./routes/student.routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n \n"
+                },
+                {
+                    "date": 1771175528489,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,18 @@\n+\n+\n+\n+\n+const express = require(\"express\");\n+const classRouter = require(\"./routes/class.routes\");\n+const studentRouter = require(\"./routes/student.routes\");\n+const attendanceRouter = require(\"./routes/attendance.routes\");\n+\n+const app = express();\n+\n+app.use(express.json());\n+\n+app.use(\"/classes\", classRouter);\n+app.use(\"/students\", studentRouter);\n+app.use(\"/attendance\", attendanceRouter);\n+\n+module.exports = app;\n"
+                },
+                {
+                    "date": 1771175535367,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,4 @@\n-\n-\n-\n-\n const express = require(\"express\");\n const classRouter = require(\"./routes/class.routes\");\n const studentRouter = require(\"./routes/student.routes\");\n const attendanceRouter = require(\"./routes/attendance.routes\");\n@@ -15,22 +11,4 @@\n app.use(\"/students\", studentRouter);\n app.use(\"/attendance\", attendanceRouter);\n \n module.exports = app;\n-\n-\n-\n-\n-const express = require(\"express\");\n-const classRouter = require(\"./routes/class.routes\");\n-const studentRouter = require(\"./routes/student.routes\");\n-const attendanceRouter = require(\"./routes/attendance.routes\");\n-\n-const app = express();\n-\n-app.use(express.json());\n-\n-app.use(\"/classes\", classRouter);\n-app.use(\"/students\", studentRouter);\n-app.use(\"/attendance\", attendanceRouter);\n-\n-module.exports = app;\n"
+                }
+            ],
+            "date": 1771169693868,
+            "name": "Commit-0",
+            "content": "const express = require(\"express\");\nconst classRouter = require(\"./routes/class.routes\");\nconst studentRouter = require(\"./routes/student.routes\");\nconst attendanceRouter = require(\"./routes/attendance.routes\");\n\nconst app = express();\n\napp.use(express.json());\n\napp.use(\"/classes\", classRouter);\napp.use(\"/students\", studentRouter);\napp.use(\"/attendance\", attendanceRouter);\n\nmodule.exports = app;\n"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/services/attendance.service.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1771169672723,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170456713,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,42 +1,49 @@\n const prisma = require(\"../config/prisma\");\n+const { resolveConflict } = require(\"../utils/conflictResolver\");\n \n exports.createRecord = async ({ classId, date }) => {\n   return prisma.attendanceRecord.create({\n     data: {\n       classId,\n-      date: new Date(date)\n-    }\n+      date: new Date(date),\n+    },\n   });\n };\n \n exports.markAttendance = async ({ recordId, studentId, status }) => {\n   return prisma.attendanceEntry.upsert({\n     where: {\n-      recordId_studentId: { recordId, studentId }\n+      recordId_studentId: { recordId, studentId },\n     },\n     update: { status },\n-    create: { recordId, studentId, status }\n+    create: { recordId, studentId, status },\n   });\n };\n \n exports.syncAttendance = async ({ entries }) => {\n-  for (const e of entries) {\n+  for (const entry of entries) {\n+    const existing = await prisma.attendanceEntry.findUnique({\n+      where: {\n+        recordId_studentId: {\n+          recordId: entry.recordId,\n+          studentId: entry.studentId,\n+        },\n+      },\n+    });\n+\n+    const resolved = resolveConflict(existing, entry);\n+\n     await prisma.attendanceEntry.upsert({\n       where: {\n         recordId_studentId: {\n-          recordId: e.recordId,\n-          studentId: e.studentId\n-        }\n+          recordId: entry.recordId,\n+          studentId: entry.studentId,\n+        },\n       },\n-      update: { status: e.status, synced: true },\n-      create: {\n-        recordId: e.recordId,\n-        studentId: e.studentId,\n-        status: e.status,\n-        synced: true\n-      }\n+      update: resolved,\n+      create: resolved,\n     });\n   }\n \n-  return { message: \"Sync complete\" };\n+  return { message: \"Offline sync completed\" };\n };\n"
+                }
+            ],
+            "date": 1771169672723,
+            "name": "Commit-0",
+            "content": "const prisma = require(\"../config/prisma\");\n\nexports.createRecord = async ({ classId, date }) => {\n  return prisma.attendanceRecord.create({\n    data: {\n      classId,\n      date: new Date(date)\n    }\n  });\n};\n\nexports.markAttendance = async ({ recordId, studentId, status }) => {\n  return prisma.attendanceEntry.upsert({\n    where: {\n      recordId_studentId: { recordId, studentId }\n    },\n    update: { status },\n    create: { recordId, studentId, status }\n  });\n};\n\nexports.syncAttendance = async ({ entries }) => {\n  for (const e of entries) {\n    await prisma.attendanceEntry.upsert({\n      where: {\n        recordId_studentId: {\n          recordId: e.recordId,\n          studentId: e.studentId\n        }\n      },\n      update: { status: e.status, synced: true },\n      create: {\n        recordId: e.recordId,\n        studentId: e.studentId,\n        status: e.status,\n        synced: true\n      }\n    });\n  }\n\n  return { message: \"Sync complete\" };\n};\n"
+        }
+    ]
+}

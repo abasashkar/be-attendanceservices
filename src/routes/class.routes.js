@@ -1,8 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { getClasses } = require("../controllers/class.controller");
 const authenticate = require("../middlewares/auth.middleware");
+const requireRole = require("../middlewares/role.middleware");
+const { getClasses, createClassByAdmin } = require("../controllers/class.controller");
 
-router.get("/", authenticate, getClasses);
+router.get("/", authenticate,requireRole("TEACHER"), getClasses);
+router.post(
+  "/test",
+  authenticate,
+  requireRole("ADMIN"),
+  createClassByAdmin
+);
+
 
 module.exports = router;

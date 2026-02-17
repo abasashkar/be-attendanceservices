@@ -1,0 +1,34 @@
+{
+    "sourceFile": "src/middlewares/auth.middleware.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1771165845047,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771166431244,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,28 @@\n+const jwt = require(\"jsonwebtoken\");\n+\n+console.log(\"⚡ auth.middleware loaded, NODE_ENV =\", process.env.NODE_ENV);\n+\n+const authenticate = (req, res, next) => {\n+  console.log(\"⚡ Incoming request:\", req.method, req.path);\n+  console.log(\"⚡ Request headers:\", req.headers);\n+\n+\n+  // Normal JWT auth\n+  const token = req.headers.authorization?.split(\" \")[1];\n+  if (!token) {\n+    console.log(\"⚠️ No token provided\");\n+    return res.status(401).json({ message: \"Unauthorized: No token provided\" });\n+  }\n+\n+  try {\n+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n+    console.log(\"⚡ Token decoded:\", decoded);\n+    req.user = decoded;\n+    next();\n+  } catch (err) {\n+    console.log(\"⚠️ Invalid token:\", err.message);\n+    return res.status(401).json({ message: \"Unauthorized: Invalid token\" });\n+  }\n+};\n+\n+module.exports = authenticate;\n"
+                },
+                {
+                    "date": 1771170256638,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,56 +1,18 @@\n const jwt = require(\"jsonwebtoken\");\n \n-console.log(\"⚡ auth.middleware loaded, NODE_ENV =\", process.env.NODE_ENV);\n-\n const authenticate = (req, res, next) => {\n-  console.log(\"⚡ Incoming request:\", req.method, req.path);\n-  console.log(\"⚡ Request headers:\", req.headers);\n-\n-\n-  // Normal JWT auth\n   const token = req.headers.authorization?.split(\" \")[1];\n   if (!token) {\n-    console.log(\"⚠️ No token provided\");\n-    return res.status(401).json({ message: \"Unauthorized: No token provided\" });\n+    return res.status(401).json({ message: \"Unauthorized\" });\n   }\n \n   try {\n     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n-    console.log(\"⚡ Token decoded:\", decoded);\n     req.user = decoded;\n     next();\n   } catch (err) {\n-    console.log(\"⚠️ Invalid token:\", err.message);\n-    return res.status(401).json({ message: \"Unauthorized: Invalid token\" });\n+    return res.status(401).json({ message: \"Invalid token\" });\n   }\n };\n \n module.exports = authenticate;\n-const jwt = require(\"jsonwebtoken\");\n-\n-console.log(\"⚡ auth.middleware loaded, NODE_ENV =\", process.env.NODE_ENV);\n-\n-const authenticate = (req, res, next) => {\n-  console.log(\"⚡ Incoming request:\", req.method, req.path);\n-  console.log(\"⚡ Request headers:\", req.headers);\n-\n-\n-  // Normal JWT auth\n-  const token = req.headers.authorization?.split(\" \")[1];\n-  if (!token) {\n-    console.log(\"⚠️ No token provided\");\n-    return res.status(401).json({ message: \"Unauthorized: No token provided\" });\n-  }\n-\n-  try {\n-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n-    console.log(\"⚡ Token decoded:\", decoded);\n-    req.user = decoded;\n-    next();\n-  } catch (err) {\n-    console.log(\"⚠️ Invalid token:\", err.message);\n-    return res.status(401).json({ message: \"Unauthorized: Invalid token\" });\n-  }\n-};\n-\n-module.exports = authenticate;\n"
+                },
+                {
+                    "date": 1771172176966,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,16 @@\n const jwt = require(\"jsonwebtoken\");\n \n const authenticate = (req, res, next) => {\n   const token = req.headers.authorization?.split(\" \")[1];\n+\n   if (!token) {\n     return res.status(401).json({ message: \"Unauthorized\" });\n   }\n \n   try {\n     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n+    console.log(\"Decoded:\", decoded);\n     req.user = decoded;\n     next();\n   } catch (err) {\n     return res.status(401).json({ message: \"Invalid token\" });\n"
+                },
+                {
+                    "date": 1771173882517,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,18 +3,18 @@\n const authenticate = (req, res, next) => {\n   const token = req.headers.authorization?.split(\" \")[1];\n \n   if (!token) {\n-    return res.status(401).json({ message: \"Unauthorized\" });\n+    return res.status(403).json({ message: \"Unauthorized\" });\n   }\n \n   try {\n     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n     console.log(\"Decoded:\", decoded);\n     req.user = decoded;\n     next();\n   } catch (err) {\n-    return res.status(401).json({ message: \"Invalid token\" });\n+    return res.status(403).json({ message: \"Invalid token\" });\n   }\n };\n \n module.exports = authenticate;\n"
+                }
+            ],
+            "date": 1771165845047,
+            "name": "Commit-0",
+            "content": "const jwt = require(\"jsonwebtoken\");\n\nconsole.log(\"⚡ auth.middleware loaded, NODE_ENV =\", process.env.NODE_ENV);\n\nconst authenticate = (req, res, next) => {\n  console.log(\"⚡ Incoming request:\", req.method, req.path);\n  console.log(\"⚡ Request headers:\", req.headers);\n\n\n  // Normal JWT auth\n  const token = req.headers.authorization?.split(\" \")[1];\n  if (!token) {\n    console.log(\"⚠️ No token provided\");\n    return res.status(401).json({ message: \"Unauthorized: No token provided\" });\n  }\n\n  try {\n    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);\n    console.log(\"⚡ Token decoded:\", decoded);\n    req.user = decoded;\n    next();\n  } catch (err) {\n    console.log(\"⚠️ Invalid token:\", err.message);\n    return res.status(401).json({ message: \"Unauthorized: Invalid token\" });\n  }\n};\n\nmodule.exports = authenticate;\n"
+        }
+    ]
+}

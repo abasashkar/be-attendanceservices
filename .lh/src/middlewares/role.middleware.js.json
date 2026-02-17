@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/middlewares/role.middleware.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1771170278405,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771172096434,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,13 @@\n const requireRole = (...roles) => {\n   return (req, res, next) => {\n+    console.log(\"User Role:\", req.user.role);\n+    console.log(\"Allowed Roles:\", roles);\n+\n     if (!roles.includes(req.user.role)) {\n       return res.status(403).json({ message: \"Forbidden\" });\n     }\n+\n     next();\n   };\n };\n \n"
+                },
+                {
+                    "date": 1771172582650,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,22 @@\n const requireRole = (...roles) => {\n   return (req, res, next) => {\n+    console.log(\"FULL req.user:\", req.user);\n+\n+    if (!req.user) {\n+      console.log(\"No user attached ❌\");\n+      return res.status(403).json({ message: \"No user found\" });\n+    }\n+\n     console.log(\"User Role:\", req.user.role);\n     console.log(\"Allowed Roles:\", roles);\n \n     if (!roles.includes(req.user.role)) {\n+      console.log(\"Role mismatch ❌\");\n       return res.status(403).json({ message: \"Forbidden\" });\n     }\n \n+    console.log(\"Role matched ✅\");\n     next();\n   };\n };\n \n"
+                },
+                {
+                    "date": 1771173835035,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,17 +3,17 @@\n     console.log(\"FULL req.user:\", req.user);\n \n     if (!req.user) {\n       console.log(\"No user attached ❌\");\n-      return res.status(403).json({ message: \"No user found\" });\n+      return res.status(401).json({ message: \"No user found\" });\n     }\n \n     console.log(\"User Role:\", req.user.role);\n     console.log(\"Allowed Roles:\", roles);\n \n     if (!roles.includes(req.user.role)) {\n       console.log(\"Role mismatch ❌\");\n-      return res.status(403).json({ message: \"Forbidden\" });\n+      return res.status(401).json({ message: \"Forbidden\" });\n     }\n \n     console.log(\"Role matched ✅\");\n     next();\n"
+                }
+            ],
+            "date": 1771170278405,
+            "name": "Commit-0",
+            "content": "const requireRole = (...roles) => {\n  return (req, res, next) => {\n    if (!roles.includes(req.user.role)) {\n      return res.status(403).json({ message: \"Forbidden\" });\n    }\n    next();\n  };\n};\n\nmodule.exports = requireRole;\n"
+        }
+    ]
+}

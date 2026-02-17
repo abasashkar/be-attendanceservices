@@ -1,3 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // or mysql or sqlite (use what you're using)
+  url      = env("DATABASE_URL")
+}
+
+
+
+
 model Teacher {
   id        String   @id @default(uuid())
   name      String
@@ -25,6 +37,7 @@ model Student {
   createdAt DateTime @default(now())
 }
 
+
 model AttendanceRecord {
   id        String   @id @default(uuid())
   classId   String
@@ -33,19 +46,19 @@ model AttendanceRecord {
   entries   AttendanceEntry[]
   createdAt DateTime @default(now())
 
-  @@unique([classId, date]) // prevent duplicate record same day
+  @@unique([classId, date])
 }
 
 model AttendanceEntry {
   id          String   @id @default(uuid())
   recordId    String
   studentId   String
-  status      String   // PRESENT / ABSENT
+  status      String
   synced      Boolean  @default(false)
   updatedAt   DateTime @updatedAt
 
   record      AttendanceRecord @relation(fields: [recordId], references: [id])
   student     Student          @relation(fields: [studentId], references: [id])
 
-  @@unique([recordId, studentId]) // avoid duplicate per student
+  @@unique([recordId, studentId])
 }

@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/routes/attendance.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1771169578618,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170336949,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,15 @@\n const express = require(\"express\");\n const router = express.Router();\n-const { createRecord, markAttendance, syncAttendance } = require(\"../controllers/attendance.controller\");\n const authenticate = require(\"../middlewares/auth.middleware\");\n+const requireRole = require(\"../middlewares/role.middleware\");\n+const {\n+  createRecord,\n+  markAttendance,\n+  syncAttendance,\n+} = require(\"../controllers/attendance.controller\");\n \n-router.post(\"/create\", authenticate, createRecord);\n-router.post(\"/mark\", authenticate, markAttendance);\n-router.post(\"/sync\", authenticate, syncAttendance);\n+router.post(\"/create\", authenticate, requireRole(\"TEACHER\"), createRecord);\n+router.post(\"/mark\", authenticate, requireRole(\"TEACHER\"), markAttendance);\n+router.post(\"/sync\", authenticate, requireRole(\"TEACHER\"), syncAttendance);\n \n module.exports = router;\n"
+                },
+                {
+                    "date": 1771170564988,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n const {\n   createRecord,\n   markAttendance,\n   syncAttendance,\n-} = require(\"../controllers/attendance.controller\");\n+} = require(\"../controllers/\");\n \n router.post(\"/create\", authenticate, requireRole(\"TEACHER\"), createRecord);\n router.post(\"/mark\", authenticate, requireRole(\"TEACHER\"), markAttendance);\n router.post(\"/sync\", authenticate, requireRole(\"TEACHER\"), syncAttendance);\n"
+                },
+                {
+                    "date": 1771170572261,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,15 @@\n+const express = require(\"express\");\n+const router = express.Router();\n+const authenticate = require(\"../middlewares/auth.middleware\");\n+const requireRole = require(\"../middlewares/role.middleware\");\n+const {\n+  createRecord,\n+  markAttendance,\n+  syncAttendance,\n+} = require(\"../controllers/attendance.controller\");\n+\n+router.post(\"/create\", authenticate, requireRole(\"TEACHER\"), createRecord);\n+router.post(\"/mark\", authenticate, requireRole(\"TEACHER\"), markAttendance);\n+router.post(\"/sync\", authenticate, requireRole(\"TEACHER\"), syncAttendance);\n+\n+module.exports = router;\n"
+                }
+            ],
+            "date": 1771169578618,
+            "name": "Commit-0",
+            "content": "const express = require(\"express\");\nconst router = express.Router();\nconst { createRecord, markAttendance, syncAttendance } = require(\"../controllers/attendance.controller\");\nconst authenticate = require(\"../middlewares/auth.middleware\");\n\nrouter.post(\"/create\", authenticate, createRecord);\nrouter.post(\"/mark\", authenticate, markAttendance);\nrouter.post(\"/sync\", authenticate, syncAttendance);\n\nmodule.exports = router;\n"
+        }
+    ]
+}

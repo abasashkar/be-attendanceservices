@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/services/class.service.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1771170021328,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1771170405710,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   const cached = await redis.get(cacheKey);\n   if (cached) return JSON.parse(cached);\n \n   const classes = await prisma.class.findMany({\n-    where: { teacherId }\n+    where: { teacherId },\n   });\n \n   await redis.set(cacheKey, JSON.stringify(classes), \"EX\", 1800);\n   return classes;\n"
+                },
+                {
+                    "date": 1771170522466,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+const prisma = require(\"../config/prisma\");\n+const redis = require(\"../\");\n+\n+exports.getClassesByTeacher = async (teacherId) => {\n+  const cacheKey = `classes:${teacherId}`;\n+\n+  const cached = await redis.get(cacheKey);\n+  if (cached) return JSON.parse(cached);\n+\n+  const classes = await prisma.class.findMany({\n+    where: { teacherId },\n+  });\n+\n+  await redis.set(cacheKey, JSON.stringify(classes), \"EX\", 1800);\n+  return classes;\n+};\n"
+                }
+            ],
+            "date": 1771170021328,
+            "name": "Commit-0",
+            "content": "const prisma = require(\"../config/prisma\");\nconst redis = require(\"../config/redis\");\n\nexports.getClassesByTeacher = async (teacherId) => {\n  const cacheKey = `classes:${teacherId}`;\n\n  const cached = await redis.get(cacheKey);\n  if (cached) return JSON.parse(cached);\n\n  const classes = await prisma.class.findMany({\n    where: { teacherId }\n  });\n\n  await redis.set(cacheKey, JSON.stringify(classes), \"EX\", 1800);\n  return classes;\n};\n"
+        }
+    ]
+}
