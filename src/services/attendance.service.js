@@ -1,12 +1,13 @@
 const prisma = require("../config/prisma");
-const { resolveConflict } = require("../utils/conflictResolver");
 
 exports.createRecord = async ({ classId, date }) => {
-  return prisma.attendanceRecord.create({
-    data: {
-      classId,
-      date: new Date(date),
+  const dateObj = new Date(date);
+  return prisma.attendanceRecord.upsert({
+    where: {
+      classId_date: { classId, date: dateObj },
     },
+    create: { classId, date: dateObj },
+    update: {},
   });
 };
 
@@ -20,32 +21,45 @@ exports.markAttendance = async ({ recordId, studentId, status }) => {
   });
 };
 
-exports.syncAttendance = async ({ entries }) => {
+exports.syncAttendance = async ({ classId, recordId, entries }) => {
+  if (!classId || !recordId || !Array.isArray(entries)) {
+    const err = new Error("classId, recordId, and entries (array) are required");
+    err.code = "VALIDATION_ERROR";
+    throw err;
+  }
+
+  const record = await prisma.attendanceRecord.findUnique({
+    where: { id: recordId },
+  });
+
+  if (!record) {
+    const err = new Error("Attendance record not found");
+    err.code = "NOT_FOUND";
+    throw err;
+  }
+
+  if (record.classId !== classId) {
+    const err = new Error("Record does not belong to the given class");
+    err.code = "VALIDATION_ERROR";
+    throw err;
+  }
+
   for (const entry of entries) {
-    const existing = await prisma.attendanceEntry.findUnique({
-      where: {
-        recordId_studentId: {
-          recordId: entry.recordId,
-          studentId: entry.studentId,
-        },
-      },
-    });
-
-    const resolved = resolveConflict(existing, entry);
-
+    const { studentId, status } = entry;
+    if (!studentId || status == null || status === undefined) {
+      continue;
+    }
+    // Composite key @@unique([recordId, studentId]) requires both fields
     await prisma.attendanceEntry.upsert({
       where: {
-        recordId_studentId: {
-          recordId: entry.recordId,
-          studentId: entry.studentId,
-        },
+        recordId_studentId: { recordId, studentId },
       },
-      update: resolved,
-      create: resolved,
+      update: { status, synced: true },
+      create: { recordId, studentId, status, synced: true },
     });
   }
 
-  return { message: "Offline sync completed" };
+  return { message: "Sync completed", recordId, count: entries.length };
 };
 
 exports.getAttendanceByRecord = async (recordId) => {
@@ -54,5 +68,12 @@ exports.getAttendanceByRecord = async (recordId) => {
     include: {
       student: true, // optional but useful
     },
+  });
+};
+
+exports.getRecordsByClassId = async (classId) => {
+  return prisma.attendanceRecord.findMany({
+    where: { classId },
+    orderBy: { date: "desc" },
   });
 };

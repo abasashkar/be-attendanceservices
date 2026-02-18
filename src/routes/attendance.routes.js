@@ -6,18 +6,16 @@ const {
   createRecord,
   markAttendance,
   syncAttendance,
-  getAttendanceByRecord
+  getAttendanceByRecord,
+  getRecordsByClassId,
 } = require("../controllers/attendance.controller");
 
 router.post("/create", authenticate, requireRole("TEACHER"), createRecord);
 router.post("/mark", authenticate, requireRole("TEACHER"), markAttendance);
 router.post("/sync", authenticate, requireRole("TEACHER"), syncAttendance);
 
-router.get(
-  "/:recordId",
-  authenticate,
-  requireRole("TEACHER"),
-  getAttendanceByRecord
-);
+router.get("/class/:classId", authenticate, requireRole("TEACHER"), getRecordsByClassId);
+
+router.get("/:recordId", authenticate, requireRole("TEACHER"), getAttendanceByRecord);
 
 module.exports = router;
